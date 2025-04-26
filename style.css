@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f8ff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #006400;
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: white;
+  font-size: 1.2rem;
+  padding-bottom: 5px;
+  transition: border-bottom 0.3s, color 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+  color: #90ee90;
+  border-bottom: 2px solid #90ee90;
+}
+
+/* Main */
+.container {
+  flex: 1;
+  padding: 2rem;
+}
+
+.hidden {
+  display: none;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #006400;
+  margin-bottom: 1rem;
+}
+
+input[type="text"], input[type="number"], select {
+  padding: 0.8rem;
+  margin: 0.5rem 0;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
+button {
+  background-color: #32CD32;
+  border: none;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #228B22;
+}
+
+.reset-btn {
+  background-color: #FF4500;
+}
+
+.reset-btn:hover {
+  background-color: #cc3700;
+}
+
+/* Table och rundor */
+.round-summary {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+}
+
+
+.footer {
+  background-color: #006400;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+}
+
+@media (max-width: 600px) {
+  .top-navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.5rem 1rem;
+  }
+
+  .logo {
+    font-size: 1.2rem; /* Mindre logo */
+    margin-bottom: 0.5rem;
+  }
+.nav-links {
+    flex-direction: row; /* Liggande meny på mobil också */
+    justify-content: center;
+    width: 100%;
+    gap: 1rem;
+  }
+
+.nav-links a {
+    font-size: 1rem; /* Mindre länktext */
+    padding: 0;
+  }
+}

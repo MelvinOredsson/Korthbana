@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Golf Korthålsbana</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="top-navbar">
+    <div class="logo">⛳ Golf Korthålsbana</div>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPlay()">Spela</a></li>
+      <li><a href="#" onclick="showResults()">Resultat</a></li>
+    </ul>
+  </nav>
+
+  <!-- Spela -->
+  <div class="container">
+    <section id="playSection">
+      <h1>🏌️‍♂️ Golf Korthålsbana</h1>
+      <div class="players-section">
+        <h2>Lägg till spelare</h2>
+        <input type="text" id="playerNameInput" placeholder="Spelarens namn">
+        <button onclick="addPlayer()">Lägg till spelare</button>
+        <div id="playerList"></div>
+      </div>
+      <div class="holes-section hidden">
+        <h2>Logga slag (6 hål)</h2>
+        <div id="holesForms"></div>
+        <button onclick="submitScores()" class="submit-btn">Spara runda</button>
+      </div>
+    </section>
+
+    <!-- Rundsammanfattning -->
+    <section id="roundSummarySection" class="hidden">
+      <h1>📊 Rundans Sammanfattning</h1>
+      <div id="roundSummary"></div>
+      <button onclick="showResults()" class="submit-btn">Visa alla resultat</button>
+    </section>
+
+    <!-- Alla resultat -->
+    <section id="resultSection" class="hidden">
+      <h1>📋 Resultat</h1>
+      <div id="resultContainer"></div>
+      <button onclick="resetResults()" class="reset-btn">Nollställ alla resultat</button>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <p>Skapad av Melvin Oredsson 2025</p>
+  </footer>
+
+  <!-- Firebase + Firestore SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore }    from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } 
+      from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Din Firebase-konfiguration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7fzr083rmprjEcVGOHjkttQlRE_cH66Y",
+      authDomain: "golf-stat-ea319.firebaseapp.com",
+      projectId: "golf-stat-ea319",
+      storageBucket: "golf-stat-ea319.appspot.com",
+      messagingSenderId: "600756627302",
+      appId: "1:600756627302:web:b65f53c342434670e68aa7",
+      measurementId: "G-TRJH17G5DM"
+    };
+
+    // Initiera Firebase
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // Exponera för script.js
+    window.firestoreDB  = db;
+    window.fsCollection = collection;
+    window.fsAddDoc     = addDoc;
+    window.fsOnSnap     = onSnapshot;
+    window.fsQuery      = query;
+    window.fsOrderBy    = orderBy;
+    window.fsDeleteDoc  = deleteDoc;
+    window.fsDoc        = doc;
+  </script>
+
+  <!-- Din applikationslogik -->
+  <script src="script.js"></script>
+</body>
+</html>
