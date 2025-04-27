@@ -1,5 +1,5 @@
 // API-nyckel
-const apiKey = '84e1dce5111ae8795802b1191dd87010'; // Ersätt med din egen API-nyckel
+const apiKey = '84e1dce5111ae8795802b1191dd87010'; 
 
 // Funktion för att översätta väderbeskrivningar till svenska
 function translateWeatherDescription(description) {
@@ -46,18 +46,20 @@ function showWeather(position) {
 
 // Felhantering för om geolokaliseringen misslyckas
 function showError(error) {
+  const errorMessage = document.getElementById('error-message');
+
   switch(error.code) {
     case error.PERMISSION_DENIED:
-      alert("Användaren nekade att ge tillgång till geolokalisering.");
+      errorMessage.textContent = "Användaren nekade att ge tillgång till geolokalisering. Vänligen ge tillstånd i din webbläsare.";
       break;
     case error.POSITION_UNAVAILABLE:
-      alert("Information om positionen är inte tillgänglig.");
+      errorMessage.textContent = "Information om positionen är inte tillgänglig.";
       break;
     case error.TIMEOUT:
-      alert("Timeout när vi försökte hämta din position.");
+      errorMessage.textContent = "Timeout när vi försökte hämta din position.";
       break;
     case error.UNKNOWN_ERROR:
-      alert("Ett okänt fel inträffade.");
+      errorMessage.textContent = "Ett okänt fel inträffade.";
       break;
   }
 }
