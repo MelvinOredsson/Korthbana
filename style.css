@@ -236,3 +236,18 @@ button:hover {
     font-size: 1rem;
   }
 }
+#error-message {
+  color: red;
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  #weather {
+    padding: 15px;
+    margin: 10px;
+  }
+}
