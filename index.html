@@ -14,6 +14,7 @@
     <ul class="nav-links">
       <li><a href="#" onclick="showPlay()">Spela</a></li>
       <li><a href="#" onclick="showResults()">Resultat</a></li>
+      <li><a href="väder.html">Väder</a></li>
     </ul>
   </nav>
 
@@ -27,12 +28,16 @@
         <button onclick="addPlayer()">Lägg till spelare</button>
         <div id="playerList"></div>
       </div>
+
       <div class="holes-section hidden">
         <h2>Logga slag (6 hål)</h2>
         <div id="holesForms"></div>
         <button onclick="submitScores()" class="submit-btn">Spara runda</button>
+        <button onclick="clearCurrentRound()" style="margin-top: 1rem;">Rensa runda</button>
+
       </div>
     </section>
+
 
     <!-- Rundsammanfattning -->
     <section id="roundSummarySection" class="hidden">
@@ -74,7 +79,7 @@
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
 
-    // Exponera för script.js
+    
     window.firestoreDB  = db;
     window.fsCollection = collection;
     window.fsAddDoc     = addDoc;
@@ -85,7 +90,7 @@
     window.fsDoc        = doc;
   </script>
 
-  <!-- Din applikationslogik -->
+  
   <script src="script.js"></script>
 </body>
 </html>
