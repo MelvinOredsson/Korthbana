@@ -5,7 +5,8 @@ let players = [];
 function addPlayer() {
   const name = document.getElementById('playerNameInput').value.trim();
   if (!name) return alert('Ange ett namn!');
-  players.push({ name, scores: [], totalScore: 0 });
+  players.push({ name, scores: Array(numHoles).fill(''), totalScore: 0 });
+  savePlayersToLocalStorage();
   document.getElementById('playerNameInput').value = '';
   updatePlayerList();
 }
@@ -22,6 +23,8 @@ function updatePlayerList() {
   if (players.length) {
     document.querySelector('.holes-section').classList.remove('hidden');
     generateHoleForms();
+  } else {
+    document.querySelector('.holes-section').classList.add('hidden');
   }
 }
 
@@ -37,7 +40,14 @@ function generateHoleForms() {
       inp.type = 'number';
       inp.min = '1';
       inp.placeholder = `Hål ${h}`;
+      inp.value = p.scores[h - 1] || '';
       inp.id = `player-${i}-hole-${h}`;
+
+      inp.addEventListener('input', (e) => {
+        players[i].scores[h - 1] = parseInt(e.target.value) || '';
+        savePlayersToLocalStorage();
+      });
+
       wrap.appendChild(inp);
     }
     container.appendChild(wrap);
@@ -46,22 +56,19 @@ function generateHoleForms() {
 
 // Läs in poäng, spara runda till Firestore och visa sammanfattning
 async function submitScores() {
-  // Läs poäng
   for (let i = 0; i < players.length; i++) {
     const p = players[i];
-    p.scores = [];
     let sum = 0;
     for (let h = 1; h <= numHoles; h++) {
       const v = document.getElementById(`player-${i}-hole-${h}`).value;
       if (!v) return alert('Alla hål måste fyllas i!');
       const n = parseInt(v);
-      p.scores.push(n);
+      p.scores[h - 1] = n;
       sum += n;
     }
     p.totalScore = sum;
   }
 
-  // Spara i Firestore
   const roundData = {
     date: new Date().toISOString(),
     players
@@ -72,6 +79,7 @@ async function submitScores() {
     console.error('Fel vid spara i Firestore:', err);
   }
 
+  clearPlayersLocalStorage();
   showRoundSummary();
 }
 
@@ -82,7 +90,6 @@ function showRoundSummary() {
   const out = document.getElementById('roundSummary');
   out.innerHTML = '';
 
-  // Hitta vinnare
   const minScore = Math.min(...players.map(p => p.totalScore));
   players.forEach(p => {
     const crown = p.totalScore === minScore ? ' 👑' : '';
@@ -98,10 +105,8 @@ function showRoundSummary() {
     out.appendChild(div);
   });
 
-  // Rensa för ny runda
   players = [];
   updatePlayerList();
-  document.querySelector('.holes-section').classList.add('hidden');
 }
 
 // Gå till resultatvyn
@@ -117,7 +122,6 @@ function renderRounds(rounds) {
   container.innerHTML = '';
   rounds.forEach((r, idx) => {
     const minScore = Math.min(...r.players.map(p => p.totalScore));
-    // Skapa kort
     let html = `
       <div class="round-summary" style="margin-bottom:1rem; padding:1rem; border:1px solid #ccc; border-radius:8px;">
         <h3>Runda ${idx + 1} – ${new Date(r.date).toLocaleString('sv-SE')}</h3>
@@ -146,11 +150,10 @@ async function deleteRound(id) {
   await fsDeleteDoc(fsDoc(firestoreDB, 'rounds', id));
 }
 
-// Nollställ alla rundor
+// Rensa alla rundor
 async function resetResults() {
   if (!confirm('Ta bort alla rundor?')) return;
   const roundsRef = fsCollection(firestoreDB, 'rounds');
-  // Hämta alla dokument
   const snap = await fsQuery(roundsRef, fsOrderBy('date', 'asc'));
   snap.forEach(docSnap => {
     fsDeleteDoc(fsDoc(firestoreDB, 'rounds', docSnap.id));
@@ -164,8 +167,27 @@ function showPlay() {
   document.getElementById('resultSection').classList.add('hidden');
 }
 
-// Starta realtids-lyssnare direkt
+// LocalStorage-hantering
+function savePlayersToLocalStorage() {
+  localStorage.setItem('golfPlayers', JSON.stringify(players));
+}
+
+function loadPlayersFromLocalStorage() {
+  const saved = localStorage.getItem('golfPlayers');
+  if (saved) {
+    players = JSON.parse(saved);
+    updatePlayerList();
+  }
+}
+
+function clearPlayersLocalStorage() {
+  localStorage.removeItem('golfPlayers');
+}
+
+// Ladda vid start
 document.addEventListener('DOMContentLoaded', () => {
+  loadPlayersFromLocalStorage();
+
   const roundsRef = fsCollection(firestoreDB, 'rounds');
   const q = fsQuery(roundsRef, fsOrderBy('date', 'desc'));
   fsOnSnap(q, snapshot => {
